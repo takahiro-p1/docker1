@@ -24,6 +24,18 @@ module SessionsHelper
     end
   end
 
+    # 記憶したURL (もしくはデフォルト値) にリダイレクト
+  def redirect_back_or(default)
+    redirect_to(session[:forwarding_url] || default)
+    session.delete(:forwarding_url)
+  end
+
+  # アクセスしようとしたURLを覚えておく
+  def store_location
+    session[:forwarding_url] = request.original_url if request.get?
+    redirect_back_or
+  end
+
 
   # ユーザーがログインしていればtrue、その他ならfalseを返す
   def logged_in?
