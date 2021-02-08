@@ -9,6 +9,7 @@ class UsersController < ApplicationController
   
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts
   end
 
   def new
@@ -54,25 +55,7 @@ class UsersController < ApplicationController
     params.require(:user).permit(:name, :email, :password,
                                  :password_confirmation)
   end
-
-   # ログイン済みユーザーかどうか確認
-   def logged_in_user
-    unless logged_in?
-      flash[:danger] = "Please log in."
-      redirect_to login_url
-    end
-   end
-
-   # 現在ログインしているユーザーを返す (ユーザーがログイン中の場合のみ)
-  def current_user
-    @current_user ||= User.find_by(id: session[:user_id])
-  end
-
-  # ユーザーがログインしていればtrue、その他ならfalseを返す
-  def logged_in?
-    !current_user.nil?
-  end
-
+  
   # 正しいユーザーかどうか確認
   def correct_user
     @user = User.find(params[:id])
